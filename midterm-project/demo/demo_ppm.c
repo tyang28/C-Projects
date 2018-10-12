@@ -5,43 +5,14 @@
 #include "ppm_io.h"
 
 int main() {
-
-  // allocate space for an Image
-  Image * im = malloc(sizeof(Image));
+  
+  FILE *nika = fopen("nika.ppm", "rb");
+  Image *im = read_ppm(nika);
   if (!im) {
-    fprintf(stderr, "Uh oh. Image allocation failed!\n");
+    fprintf(stderr, "Uh oh. Image read failed!\n");
     return 1;
   }
-
-  // specify dimensions for our Image
-  im->rows = 100;
-  im->cols = 200;
   
-  
-  // allocate space for array of Pixels
-  Pixel *pix = malloc(sizeof(Pixel) * im->rows * im->cols);
-  if (!pix) {
-    fprintf(stderr, "Uh oh. Pixel array allocation failed!\n");
-    free(im);
-    return 1;
-  }
-
-  // let data field of Image point to the new array
-  im->data = pix;
-  
-  // fill Pixel array by setting all Pixels to same color
-  Pixel my_color = {0, 127, 255}; //the color for all pixels
-  Pixel white = {255, 255, 255}; //the color for all pixels
-  for (int r = 0; r < im->rows; r++) {
-    for (int c = 0; c < im->cols; c++) {
-      if (r > 10 && r < 80) { 
-	im->data[(r * im->cols) + c] = my_color;
-      } else {
-	im->data[(r * im->cols) + c] = white;
-      }
-    }
-  }
-
   // write image to disk
   FILE *fp = fopen("demo.ppm", "wb");
   if (!fp) {
@@ -57,7 +28,8 @@ int main() {
   // clean up!
   free(im->data);
   free(im);
-
   return 0;
-
+  
+  
+  
 }

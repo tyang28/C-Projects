@@ -4,7 +4,8 @@
 
 #include <assert.h>
 #include "ppm_io.h"
-
+#include <stdlib.h>
+#include <stdio.h>
 
 
 /* Read a PPM-formatted image from a file (assumes fp != NULL).
@@ -16,8 +17,30 @@ Image * read_ppm(FILE *fp) {
   // check that fp is not NULL
   assert(fp); 
 
-  return NULL;  //TO DO: replace this stub
+  char input[100];
+  int columns = 0;
+  int rows = 0;
+
+  fgets(input, 100, fp);
+  fgets(input, 100, fp);
+
+  if(input[0] == '#') {
+    fgets(input, 100, fp);
+  }
+
+  sscanf(input, "%d %d", &columns, &rows);
+    
+  fgets(input, 100, fp);
   
+  Image *image = malloc(sizeof(Image));
+  image->data = malloc(sizeof(Pixel) * rows * columns);
+  image->rows = rows;
+  image->cols = columns;
+
+  fread(image->data, sizeof(Pixel), rows*columns, fp);
+  fclose(fp);
+
+  return image;
 }
 
 
@@ -33,6 +56,7 @@ int write_ppm(FILE *fp, const Image *im) {
   // P6
   // cols rows
   // 255
+  
   fprintf(fp, "P6\n%d %d\n255\n", im->cols, im->rows);
 
   // now write the pixel array
