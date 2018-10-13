@@ -44,5 +44,11 @@ Image * read_ppm(FILE *fp);
  */
 int write_ppm(FILE *fp, const Image *im);
 
+/*add comment
+ *
+ */
+Image *swap(Image *im);
 
+//add comment
+Image *grayscale(Image *im);
 #endif
