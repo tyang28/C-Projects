@@ -44,22 +44,19 @@ Image * read_ppm(FILE *fp) {
 }
 
 Image *swap(Image *im) {
-  Pixel *tempr = malloc(sizeof(Pixel));
   for(int i = 0; i < im->rows * im->cols; i++) {
-    tempr->r = im->data->r;
+    int temp_red = im->data[i].r
     im->data[i].r = im->data[i].g;
     im->data[i].g = im->data[i].b;
-    im->data[i].b = tempr->r;
+    im->data[i].b = temp_red;
   }
-  free(tempr);
   return im;
 }
 
 Image *grayscale(Image *im) {
   
-  int intensity = 0;
-  intensity = (0.3 * im->data->r) + (0.59 * im->data->g) + (0.11 * im->data->b);
   for(int i = 0; i < im->rows * im->cols; i++) {
+    int intensity = (0.3 * im->data->r) + (0.59 * im->data->g) + (0.11 * im->data->b);
     im->data[i].r = intensity;
     im->data[i].g = intensity;
     im->data[i].b = intensity;
@@ -67,15 +64,21 @@ Image *grayscale(Image *im) {
   return im;
 }
 
-Image *zoom(Image *im) {
+Image *zoom_in(Image *im) {
+  Image *zoom = malloc(sizeof(Image));
+  zoom->rows = im->rows * 2;
+  zoom->cols = im->cols * 2;
+  zoom->data = malloc(sizeof(Pixel) * zoom->cols * zoom->rows);
   
   for(int i = 0; i < im->rows * im->cols; i++) {
-    im->data[i+1] = malloc(sizeof(Pixel));
-    im->data[i+1] = im->data[i];
-    im->data[i+ im->cols] = malloc(sizeof(Pixel));
-    im->data[i+ im->cols] = im->data[i];
-    im->data[i+ im->cols + 1] = malloc(sizeof(Pixel));
-    im->data[i+ im->cols +1] = im->data[i];
+    int row = i / zoom->cols;
+    int col = i % zoom->cols;
+    int copy_row = (row + 1)/2;
+    int copy_col = (col + 1)/2;
+    int copy_index = (copy_row * im->cols) + copy_col;
+    zoom->data[i].r = im->data[copy_index].r;
+    zoom->data[i].b = im->data[copy_index].b;
+    zoom->data[i].g = im->data[copy_index].g;
   }
   return im;
 }
