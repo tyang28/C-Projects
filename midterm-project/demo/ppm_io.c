@@ -43,45 +43,7 @@ Image * read_ppm(FILE *fp) {
   return image;
 }
 
-Image *swap(Image *im) {
-  for(int i = 0; i < im->rows * im->cols; i++) {
-    int temp_red = im->data[i].r
-    im->data[i].r = im->data[i].g;
-    im->data[i].g = im->data[i].b;
-    im->data[i].b = temp_red;
-  }
-  return im;
-}
 
-Image *grayscale(Image *im) {
-  
-  for(int i = 0; i < im->rows * im->cols; i++) {
-    int intensity = (0.3 * im->data->r) + (0.59 * im->data->g) + (0.11 * im->data->b);
-    im->data[i].r = intensity;
-    im->data[i].g = intensity;
-    im->data[i].b = intensity;
-  }
-  return im;
-}
-
-Image *zoom_in(Image *im) {
-  Image *zoom = malloc(sizeof(Image));
-  zoom->rows = im->rows * 2;
-  zoom->cols = im->cols * 2;
-  zoom->data = malloc(sizeof(Pixel) * zoom->cols * zoom->rows);
-  
-  for(int i = 0; i < im->rows * im->cols; i++) {
-    int row = i / zoom->cols;
-    int col = i % zoom->cols;
-    int copy_row = (row + 1)/2;
-    int copy_col = (col + 1)/2;
-    int copy_index = (copy_row * im->cols) + copy_col;
-    zoom->data[i].r = im->data[copy_index].r;
-    zoom->data[i].b = im->data[copy_index].b;
-    zoom->data[i].g = im->data[copy_index].g;
-  }
-  return im;
-}
 /* Write a PPM-formatted image to a file (assumes fp != NULL),
  * and return the number of pixels successfully written.
  */
