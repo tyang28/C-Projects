@@ -2,10 +2,13 @@
 //601.220, Fall 2018
 
 #include <stdio.h>
+#include "ppm_io.h"
+#include "imageManip.h"
+#include <stdlib.h>
 
 Image *swap(Image *im) {
   for(int i = 0; i < im->rows * im->cols; i++) {
-    int temp_red = im->data[i].r
+    int temp_red = im->data[i].r;
     im->data[i].r = im->data[i].g;
     im->data[i].g = im->data[i].b;
     im->data[i].b = temp_red;
@@ -52,16 +55,20 @@ Image *zoom_out(Image *im) {
 
   for(int i = 0; i < zoom->rows * zoom->cols; i++) {
     int r = i / zoom->cols;
-    Pixel topright = *(im->data[r * im->cols * 2]);
-    Pixel topleft = *(im->data[r * im->cols * 2 - 1]);
-    Pixel bottomright = *(im->data[(r+1) * im->cols * 2]);
-    Pixel bottomleft = *(im->data[(r+1) * im->cols * 2 - 1]);
+    Pixel topright = (im->data[r * im->cols * 2]);
+    Pixel topleft = (im->data[r * im->cols * 2 - 1]);
+    Pixel bottomright = (im->data[(r+1) * im->cols * 2]);
+    Pixel bottomleft = (im->data[(r+1) * im->cols * 2 - 1]);
 
     char avgr = (topright.r + topleft.r + bottomright.r + bottomleft.r)/4;
     char avgg = (topright.g + topleft.g + bottomright.g + bottomleft.g)/4;
     char avgb = (topright.b + topleft.b + bottomright.b + bottomleft.b)/4;
+
+    zoom->data[i].r = avgr;
+    zoom->data[i].g = avgg;
+    zoom->data[i].b = avgb;
     
-    zoom->data[i] = {avgr, avgg, avgb};
+    
   }
 
   return zoom;
