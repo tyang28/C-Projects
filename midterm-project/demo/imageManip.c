@@ -106,7 +106,8 @@ Image *zoom_out(Image *im) {
 
 Image *occlude(Image *im, int x1, int y1, int x2, int y2) {
 
-  if(x1 < 0 || y1 < 0 || x2 >= im->cols || y2 >= im->rows) {
+  if(x1 < 0 || y1 < 0 || x2 >= im->cols || y2 >= im->rows ||
+     x1 >= x2 || y1 >= y2) {
     return NULL;
   }
 
