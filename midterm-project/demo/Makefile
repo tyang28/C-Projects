@@ -11,5 +11,8 @@ demo_ppm.o: demo_ppm.c ppm_io.h
 ppm_io.o: ppm_io.c ppm_io.h
 	$(CC) $(CFLAGS) -c ppm_io.c
 
+imageManip.o: imageManip.c
+	$(CC) $(CFLAGS) -c ppm_io.c
+
 clean:
 	rm -f *.o demo
