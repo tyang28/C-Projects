@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Wall -Wextra -g
+CFLAGS=-std=c99 -pedantic -Wall -Wextra -lm -g
 
 
 project: project.o ppm_io.o imageManip.o

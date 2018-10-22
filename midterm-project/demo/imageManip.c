@@ -5,6 +5,8 @@
 #include "ppm_io.h"
 #include "imageManip.h"
 #include <stdlib.h>
+#include <math.h>
+
 
 Image *swap(Image *im) {
   for(int i = 0; i < im->rows * im->cols; i++) {
@@ -122,4 +124,54 @@ Image *occlude(Image *im, int x1, int y1, int x2, int y2) {
   }
 
   return im;
+}
+
+/*
+
+Image *Blur(Image *im, double sigma) {
+
+  //create new Image to put the blurred image
+  Image *new = malloc(sizeof(im));
+  new->cols = im->cols;
+  new->rows = im->rows;
+  new->data = im->data;
+
+  //size of the gaussian distribution array (which must be odd)
+  int span = sigma * 10;
+  if(span % 2)
+    span++;
+
+  //gaussian distribution array
+  double gauss[span][span];
+
+  //fill the array
+  for(int i = 0; i < span; i++) {
+    for(int j = 0; j<span; j++) {
+      //offset from the center
+      int dx = abs( i - (span+1)/2 );
+      int dy = abs( j - (span+1)/2 );
+
+      //equation for gaussian distribution
+      double g = (1.0 / (2.0 * PI * sq(sigma))) * exp( -(sq(dx) + sq(dy)) / (2 * sq(sigma)));
+
+      gauss[i][j] = g;
+    }
+  }
+
+  //now we have an array with the gaussian distribution, and have to do something with it
+  for(int index = 0; index < im->cols*im->rows; index++) {
+    //loop through stuff, i'll have to think about it more
+
+
+  }
+
+
+  return new;
+}
+
+*/
+
+
+double sq(double s) {
+  return s * s;
 }
