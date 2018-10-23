@@ -30,10 +30,14 @@ int main(int argc, char **argv) {
     fprintf(stderr, "No  operation name was specified, or operation name specified was invalid\n");
     return 4;
   }
-
+  //isnt saying if argc < 4 and saying if argv[3] == NULL the same thing, do we even need both
   Image *transform;
-
-  if(strcmp(argv[3], "swap") == 0) {
+  if(argv[3] == NULL) {
+    freeim(im);
+    fprintf(stderr, "No  operation name was specified, or operation name specified was invalid\n");
+    return 4;
+    
+  } else if(strcmp(argv[3], "swap") == 0) {
     if(argc != 4) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
@@ -67,7 +71,7 @@ int main(int argc, char **argv) {
 
     transform = zoom_out(im);
     freeim(im);
-    
+        
   } else if(strcmp(argv[3], "contrast") == 0) {
     double contr;
     if(sscanf(argv[4], "%lf", &contr) != 1 || argc != 5) {
@@ -103,10 +107,6 @@ int main(int argc, char **argv) {
   } else if(strcmp(argv[3], "blur") == 0) {
     printf("this isn't working yet\n");
 
-  } else {
-    free(im);
-    fprintf(stderr, "No operation name was specified, or operation name specified was invalid\n");
-    return 4;
   }
   
   // write image to disk
