@@ -27,4 +27,6 @@ Image *blur(Image *im, double sigma);
 
 double sq(double s);
 
+void freeim(Image *im);
+
 #endif

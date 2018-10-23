@@ -68,8 +68,8 @@ Image *zoom_in(Image *im) {
   for(int i = 0; i < zoom->rows * zoom->cols; i++) {
     int row = i / zoom->cols;
     int col = i % zoom->cols;
-    int copy_row = (row + 1)/2;
-    int copy_col = (col + 1)/2;
+    int copy_row = row / 2;
+    int copy_col = col / 2;
     int copy_index = (copy_row * im->cols) + copy_col;
     zoom->data[i].r = im->data[copy_index].r;
     zoom->data[i].b = im->data[copy_index].b;
@@ -126,7 +126,7 @@ Image *occlude(Image *im, int x1, int y1, int x2, int y2) {
   return im;
 }
 
-/*
+
 
 Image *Blur(Image *im, double sigma) {
 
@@ -169,9 +169,12 @@ Image *Blur(Image *im, double sigma) {
   return new;
 }
 
-*/
-
 
 double sq(double s) {
   return s * s;
+}
+
+void freeim(Image *im) {
+  free(im->data);
+  free(im);
 }

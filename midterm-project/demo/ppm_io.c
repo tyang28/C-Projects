@@ -63,9 +63,11 @@ int write_ppm(FILE *fp, const Image *im) {
   int num_pixels_written = fwrite(im->data, sizeof(Pixel), im->rows * im->cols, fp);
 
   if (num_pixels_written != im->rows * im->cols) {
+    fclose(fp);
     fprintf(stderr, "Uh oh. Pixel data failed to write properly!\n");
   }
-
+  
+  fclose(fp);
   return num_pixels_written;
 }
 
