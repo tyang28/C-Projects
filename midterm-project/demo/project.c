@@ -22,6 +22,7 @@ int main(int argc, char **argv) {
   }
 
   Image *im = read_ppm(input);
+
   if(!im) {
     fprintf(stderr, "Specified input file is not a properly-formatted PPM file, or reading input somehow fails\n");
     return 3;
@@ -43,7 +44,12 @@ int main(int argc, char **argv) {
       return 5;
     }
     transform = swap(im);
-        
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
+    
     //grayscale
   } else if(strcmp(argv[3], "grayscale") == 0) {
     if(argc != 4) {
@@ -51,8 +57,13 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
-    transform = grayscale(im);
 
+    transform = grayscale(im);
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
     //zoom_in
   } else if(strcmp(argv[3], "zoom_in") == 0) {
     if(argc != 4) {
@@ -61,6 +72,11 @@ int main(int argc, char **argv) {
       return 5;
     }
     transform = zoom_in(im);
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
     freeim(im);
 
     //zoom_out
@@ -72,30 +88,40 @@ int main(int argc, char **argv) {
     }
 
     transform = zoom_out(im);
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
     freeim(im);
 
     //contrast
   } else if(strcmp(argv[3], "contrast") == 0) {
     double contr;
-    if(sscanf(argv[4], "%lf", &contr) != 1 || argc != 5 || contr < 0) {
+    if(argc != 5 || sscanf(argv[4], "%lf", &contr) != 1 || contr < 0) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
 
     transform = contrast(im, contr);
-
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
+    
     //occlude
   } else if(strcmp(argv[3], "occlude") == 0) {
     int x1;
     int y1;
     int x2;
     int y2;
-    if(sscanf(argv[4], "%d", &x1) != 1 ||
+    if(argc != 8 ||
+       sscanf(argv[4], "%d", &x1) != 1 ||
        sscanf(argv[5], "%d", &y1) != 1 ||
        sscanf(argv[6], "%d", &x2) != 1 ||
-       sscanf(argv[7], "%d", &y2) != 1 ||
-       argc != 8) {
+       sscanf(argv[7], "%d", &y2) != 1) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
@@ -114,13 +140,20 @@ int main(int argc, char **argv) {
     //blur
   } else if(strcmp(argv[3], "blur") == 0) {
     double sigma;
-    if(sscanf(argv[4], "%lf", &sigma) != 1 || argc != 5 || sigma <= 0) {
+    if(argc != 5 || sscanf(argv[4], "%lf", &sigma) != 1 || sigma <= 0) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
     transform = blur(im, sigma);
-
+        
+    if(!transform) {
+      freeim(im);
+      fprintf(stderr, "Function returned null\n");
+      return 8;
+    }
+    freeim(im);
+    
     //other
   } else {
     freeim(im);

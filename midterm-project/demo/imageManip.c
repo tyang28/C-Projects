@@ -138,14 +138,15 @@ Image *occlude(Image *im, int x1, int y1, int x2, int y2) {
 Image *blur(Image *im, double sigma) {
 
   //create new Image to put the blurred image
-  Image *new = malloc(sizeof(im));
-  if(!new) {
-    return NULL;
-  }
+  Image *new = malloc(sizeof(Image));
+  //if(!new) {
+  //  return NULL;
+  //}
   new->cols = im->cols;
   new->rows = im->rows;
-  new->data = im->data;
+  new->data = malloc(new->cols * new->rows * sizeof(Pixel));
   if(!new->data) {
+    free(new);
     return NULL;
   }
   //size of the gaussian distribution array (which must be odd)
