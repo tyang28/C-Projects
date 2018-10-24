@@ -1,4 +1,6 @@
-//demo_ppm.c
+//project.c
+//Jason Kurlander jkurlan3
+//Teng-Ju Yang tyang28
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +34,8 @@ int main(int argc, char **argv) {
   }
   
   Image *transform;
-    
+
+  //swap
   if(strcmp(argv[3], "swap") == 0) {
     if(argc != 4) {
       freeim(im);
@@ -40,7 +43,8 @@ int main(int argc, char **argv) {
       return 5;
     }
     transform = swap(im);
-
+        
+    //grayscale
   } else if(strcmp(argv[3], "grayscale") == 0) {
     if(argc != 4) {
       freeim(im);
@@ -49,6 +53,7 @@ int main(int argc, char **argv) {
     }
     transform = grayscale(im);
 
+    //zoom_in
   } else if(strcmp(argv[3], "zoom_in") == 0) {
     if(argc != 4) {
       freeim(im);
@@ -57,7 +62,8 @@ int main(int argc, char **argv) {
     }
     transform = zoom_in(im);
     freeim(im);
-    
+
+    //zoom_out
   } else if(strcmp(argv[3], "zoom_out") == 0) {
     if(argc != 4) {
       freeim(im);
@@ -67,10 +73,11 @@ int main(int argc, char **argv) {
 
     transform = zoom_out(im);
     freeim(im);
-        
+
+    //contrast
   } else if(strcmp(argv[3], "contrast") == 0) {
     double contr;
-    if(sscanf(argv[4], "%lf", &contr) != 1 || argc != 5) {
+    if(sscanf(argv[4], "%lf", &contr) != 1 || argc != 5 || contr < 0) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
@@ -78,6 +85,7 @@ int main(int argc, char **argv) {
 
     transform = contrast(im, contr);
 
+    //occlude
   } else if(strcmp(argv[3], "occlude") == 0) {
     int x1;
     int y1;
@@ -93,16 +101,27 @@ int main(int argc, char **argv) {
       return 5;
     }
 
-    transform = occlude(im, x1, y1, x2, y2);
-    if(transform == NULL) {
+    if(x1 < 0 || x1 >= im->cols || x2 < 0 || x2 >= im->cols ||
+       y1 < 0 || y1 >= im->rows || y2 < 0 || y2 >= im->rows ||
+       x1 >= x2 || y1 >= y2) {
       freeim(im);
       fprintf(stderr, "Arguments for occlude operation were out of range for the given input immage\n");
       return 6;
     }
+    
+    transform = occlude(im, x1, y1, x2, y2);
 
+    //blur
   } else if(strcmp(argv[3], "blur") == 0) {
-    printf("this isn't working yet\n");
+    double sigma;
+    if(sscanf(argv[4], "%lf", &sigma) != 1 || argc != 5 || sigma <= 0) {
+      freeim(im);
+      fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
+      return 5;
+    }
+    transform = blur(im, sigma);
 
+    //other
   } else {
     freeim(im);
     fprintf(stderr, "No  operation name was specified, or operation name specified was invalid\n");

@@ -1,6 +1,6 @@
 // ppm_io.c
-// 601.220, Fall 2018
-// Starter code for midterm project - feel free to edit/add to this file
+// Jason Kurlander jkurlan3
+// Teng-Ju Yang tyang28
 
 #include <assert.h>
 #include "ppm_io.h"

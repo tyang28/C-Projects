@@ -1,5 +1,6 @@
 // imageManip.h
-//601.220, Fall 2018
+// Jason Kurlander jkurlan3
+// Teng-Ju Yang tyang28
 
 #ifndef IMAGEMANIPH
 #define IMAGEMANIPH
@@ -7,7 +8,7 @@
 #include <stdio.h>
 #include "ppm_io.h"
 
-#define PI  3.14159265358979323846
+#define PI  (double)3.14159265358979323846
 
 Image *swap(Image *im);
 
