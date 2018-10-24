@@ -139,9 +139,9 @@ Image *blur(Image *im, double sigma) {
 
   //create new Image to put the blurred image
   Image *new = malloc(sizeof(Image));
-  //if(!new) {
-  //  return NULL;
-  //}
+  if(!new) {
+    return NULL;
+  }
   new->cols = im->cols;
   new->rows = im->rows;
   new->data = malloc(new->cols * new->rows * sizeof(Pixel));
@@ -185,8 +185,8 @@ Image *blur(Image *im, double sigma) {
     int col = index % im->cols;
 
     //loop through surrounding pixels
-    for(int crow = row - span/2; crow < row + span/2; crow++) {
-      for(int ccol = col - span/2; ccol < col + span/2; ccol++) {
+    for(int crow = row - span/2; crow <= row + span/2; crow++) {
+      for(int ccol = col - span/2; ccol <= col + span/2; ccol++) {
 	//if the pixel we're looking at is actually on the image
 	if(crow >= 0 && crow < im->rows && ccol >= 0 && ccol < im->cols) {
 	  norm_sum += gauss[crow - row + span/2][ccol - col + span/2];
