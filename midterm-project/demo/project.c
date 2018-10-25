@@ -113,19 +113,31 @@ int main(int argc, char **argv) {
     
     //occlude
   } else if(strcmp(argv[3], "occlude") == 0) {
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    if(argc != 8 ||
-       sscanf(argv[4], "%d", &x1) != 1 ||
-       sscanf(argv[5], "%d", &y1) != 1 ||
-       sscanf(argv[6], "%d", &x2) != 1 ||
-       sscanf(argv[7], "%d", &y2) != 1) {
+    
+    char *leftover1;
+    char *leftover2;
+    char *leftover3;
+    char *leftover4;
+    
+    if(argc != 8) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
+    
+    int x1 = strtol(argv[4], &leftover1, 10);
+    int y1 = strtol(argv[5], &leftover2, 10);
+    int x2 = strtol(argv[6], &leftover3, 10);
+    int y2 = strtol(argv[7], &leftover4, 10);
+
+    printf("%d %d %d %d", x1, y1, x2, y2);
+    
+    if(*leftover1 || *leftover2 || *leftover3 || *leftover4) {
+      freeim(im);
+      fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
+      return 5;
+    }
+
 
     if(x1 < 0 || x1 >= im->cols || x2 < 0 || x2 >= im->cols ||
        y1 < 0 || y1 >= im->rows || y2 < 0 || y2 >= im->rows ||
