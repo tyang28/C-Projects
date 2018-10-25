@@ -21,22 +21,28 @@ Image * read_ppm(FILE *fp) {
   int columns = 0;
   int rows = 0;
 
+  //skips past the first line (which should be P6)
   fgets(input, 100, fp);
+  //reads the second line which may or may not be a comment
   fgets(input, 100, fp);
 
+  //if it is a comment then read in the next line
   if(input[0] == '#') {
     fgets(input, 100, fp);
   }
 
+  //convert the line into columns and rows
   sscanf(input, "%d %d", &columns, &rows);
-    
+
+  //skip to the next line
   fgets(input, 100, fp);
-  
+
   Image *image = malloc(sizeof(Image));
   image->data = malloc(sizeof(Pixel) * rows * columns);
   image->rows = rows;
   image->cols = columns;
 
+  //read the ppm into an image
   fread(image->data, sizeof(Pixel), rows*columns, fp);
   fclose(fp);
 

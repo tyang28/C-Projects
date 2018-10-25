@@ -41,11 +41,15 @@ Image *contrast(Image *im, double cont) {
   return im;
 }
 
+//function that does the contrast for a specific color in a specific pixel
 unsigned char ccolor(unsigned char color, double cont) {
   double new = (double)color;
+  //convert to scale between -.5 and .5
   new /= 255;
   new -= .5;
+  //scale to contrast
   new *= cont;
+  //convert back to unsigned char range
   new += .5;
   new *=255;
   if(new > 255) {
@@ -61,6 +65,7 @@ unsigned char ccolor(unsigned char color, double cont) {
   
 
 Image *zoom_in(Image *im) {
+
   Image *zoom = malloc(sizeof(Image));
   if(!zoom) {
     return NULL;
@@ -72,20 +77,26 @@ Image *zoom_in(Image *im) {
     return NULL;
   }
   
+  //for each pixel in the new zoom image
   for(int i = 0; i < zoom->rows * zoom->cols; i++) {
     int row = i / zoom->cols;
     int col = i % zoom->cols;
+    
     int copy_row = row / 2;
     int copy_col = col / 2;
+
     int copy_index = (copy_row * im->cols) + copy_col;
+
     zoom->data[i].r = im->data[copy_index].r;
     zoom->data[i].b = im->data[copy_index].b;
     zoom->data[i].g = im->data[copy_index].g;
   }
+  
   return zoom;
 }
 
 Image *zoom_out(Image *im) {
+
   Image *zoom = malloc(sizeof(Image));
   if(!zoom) {
     return NULL;
@@ -96,9 +107,13 @@ Image *zoom_out(Image *im) {
   if(!zoom->data) {
     return NULL;
   }
+
+  //for each pixel in the new zoom image
   for(int i = 0; i < zoom->rows * zoom->cols; i++) {
     int r = i / zoom->cols;
     int c = i % zoom->cols;
+
+    //each of the four pixels in the original image that will be averaged
     Pixel topright = (im->data[r * im->cols * 2 + 2*c + 1]);
     Pixel topleft = (im->data[r * im->cols * 2 + 2*c]);
     Pixel bottomright = (im->data[(2*r+1) * im->cols+ 2*c + 1]);
@@ -120,10 +135,15 @@ Image *zoom_out(Image *im) {
 
 Image *occlude(Image *im, int x1, int y1, int x2, int y2) {
 
+  //for each pixel within the 1-d image array between the coordinates
+  //**this does not necessarily mean it's inside the rectangle** (but it should make it more efficient)
   for(int i = y1*im->cols + x1; i <= y2*im->cols + x2; i++) {
     int r = i / im->cols;
     int c = i % im->cols;
+
+    //if it's within the rectangle
     if(r>=y1 && r<=y2 && c>=x1 && c<=x2) {
+      //set color to black
       im->data[i].r = 0;
       im->data[i].g = 0;
       im->data[i].b = 0;
@@ -149,6 +169,7 @@ Image *blur(Image *im, double sigma) {
     free(new);
     return NULL;
   }
+
   //size of the gaussian distribution array (which must be odd)
   int span = sigma * 10;
   if(span % 2 == 0) {
@@ -172,7 +193,7 @@ Image *blur(Image *im, double sigma) {
     }
   }
   
-  //now we have an array with the gaussian distribution, and have to do something with it
+  //for each pixel in the image
   for(int index = 0; index < im->cols*im->rows; index++) {
     
     double norm_sum = 0;
@@ -180,7 +201,7 @@ Image *blur(Image *im, double sigma) {
     double gsum = 0;
     double bsum = 0;
     
-    //location of pixel of interest in image
+    //location of pixel in terms of row/col
     int row = index / im->cols;
     int col = index % im->cols;
 
@@ -196,20 +217,22 @@ Image *blur(Image *im, double sigma) {
 	}
       }
     }
-    new->data[row * im->cols + col].r = rsum / norm_sum;
-    new->data[row * im->cols + col].g = gsum / norm_sum;
-    new->data[row * im->cols + col].b = bsum / norm_sum;
+    //set the blurred pixel
+    new->data[index].r = rsum / norm_sum;
+    new->data[index].g = gsum / norm_sum;
+    new->data[index].b = bsum / norm_sum;
     
   }
   
   return new;
 }
 
-
+//function to square a double (for the gaussian matrix)
 double sq(double s) {
   return s * s;
 }
 
+//function that frees an image and its pixels
 void freeim(Image *im) {
   free(im->data);
   free(im);

@@ -10,24 +10,29 @@
 
 int main(int argc, char **argv) {
 
+  //if the input and/or output file is missing return 1
   if(argc < 3) {
     fprintf(stderr, "Failed to supply input filename or output filename, or both\n");
     return 1;
   }
 
   FILE *input = fopen(argv[1], "rb");
+  //if the input was not opened successfully return 2
   if(!input) {
     fprintf(stderr, "Specified input file could not be opened\n");
     return 2;
   }
 
+  //read the image
   Image *im = read_ppm(input);
 
+  //if the read was unsucceful return 3
   if(!im) {
     fprintf(stderr, "Specified input file is not a properly-formatted PPM file, or reading input somehow fails\n");
     return 3;
   }
 
+  //if the operation name is missing return 4
   if(argc < 4) {
     freeim(im);
     fprintf(stderr, "No  operation name was specified, or operation name specified was invalid\n");
@@ -43,7 +48,9 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
+    
     transform = swap(im);
+
     if(!transform) {
       freeim(im);
       fprintf(stderr, "Function returned null\n");
@@ -59,6 +66,7 @@ int main(int argc, char **argv) {
     }
 
     transform = grayscale(im);
+
     if(!transform) {
       freeim(im);
       fprintf(stderr, "Function returned null\n");
@@ -71,7 +79,9 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
+
     transform = zoom_in(im);
+
     if(!transform) {
       freeim(im);
       fprintf(stderr, "Function returned null\n");
@@ -114,30 +124,31 @@ int main(int argc, char **argv) {
     //occlude
   } else if(strcmp(argv[3], "occlude") == 0) {
     
-    char *leftover1;
-    char *leftover2;
-    char *leftover3;
-    char *leftover4;
-    
     if(argc != 8) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
-    
+
+    char *leftover1;
+    char *leftover2;
+    char *leftover3;
+    char *leftover4;
+
+    //convert input to ints
     int x1 = strtol(argv[4], &leftover1, 10);
     int y1 = strtol(argv[5], &leftover2, 10);
     int x2 = strtol(argv[6], &leftover3, 10);
     int y2 = strtol(argv[7], &leftover4, 10);
 
-        
+    //if there is extra stuff that's not part of the int, return 5
     if(*leftover1 || *leftover2 || *leftover3 || *leftover4) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
 
-
+    //check that the coordinates are within the image and properly arranged
     if(x1 < 0 || x1 >= im->cols || x2 < 0 || x2 >= im->cols ||
        y1 < 0 || y1 >= im->rows || y2 < 0 || y2 >= im->rows ||
        x1 >= x2 || y1 >= y2) {
@@ -156,6 +167,7 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
       return 5;
     }
+    
     transform = blur(im, sigma);
         
     if(!transform) {
