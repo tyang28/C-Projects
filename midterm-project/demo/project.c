@@ -130,8 +130,7 @@ int main(int argc, char **argv) {
     int x2 = strtol(argv[6], &leftover3, 10);
     int y2 = strtol(argv[7], &leftover4, 10);
 
-    printf("%d %d %d %d", x1, y1, x2, y2);
-    
+        
     if(*leftover1 || *leftover2 || *leftover3 || *leftover4) {
       freeim(im);
       fprintf(stderr, "Incorrect number of arguments or kind of arguments specified for the specified operation\n");
